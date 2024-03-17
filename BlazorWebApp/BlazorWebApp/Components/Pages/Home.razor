@@ -1,0 +1,131 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using BlazorWebApp.Models; 
+
+
+@code {
+    DateOnly filter_start = new DateOnly(2024, 03, 17);
+    DateOnly filter_end = new DateOnly(2024, 03, 17);
+     
+}
+<input type="date" @bind="@filter_start" />
+<input type="date" @bind="@filter_end" /> 
+<button class="btn btn-primary" @onclick="@search">Search</button>
+
+ 
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>StartDate</th>
+            <th>EndDate</th>
+            <th>Active</th>
+        </tr>
+    </thead>
+    <tbody>
+        @code {
+            List<Tenant> data = new List<Tenant>()
+        {
+        new Tenant
+        {
+        TenantId = 1,
+        Name = "Nestle",
+        StartDate =  new DateOnly(2024, 03, 21),
+        EndDate = new DateOnly(2024,03,24),
+        isActive=true
+        },
+        new Tenant
+        {
+        TenantId = 1,
+        Name = "Coke",
+        StartDate =  new DateOnly(2024, 03, 11),
+        EndDate = new DateOnly(2024,03,14),
+        isActive=true
+        },
+        new Tenant
+        {
+        TenantId = 1,
+        Name = "AirAsia",
+        StartDate =  new DateOnly(2024, 03, 01),
+        EndDate = new DateOnly(2024,03,01),
+        isActive=true
+        },
+        new Tenant
+        {
+        TenantId = 1,
+        Name = "Dior",
+        StartDate =  new DateOnly(2024, 03, 11),
+        EndDate = new DateOnly(2024,03,14),
+        isActive=true
+        },
+        new Tenant
+        {
+        TenantId = 1,
+        Name = "Jollibee",
+        StartDate =  new DateOnly(2024, 03, 05),
+        EndDate = new DateOnly(2024,03,24),
+        isActive=true
+        },
+        new Tenant
+        {
+        TenantId = 1,
+        Name = "Mcdonalds",
+        StartDate =  new DateOnly(2024, 03, 01),
+        EndDate = new DateOnly(2024,03,20),
+        isActive=true
+        },
+        new Tenant
+        {
+        TenantId = 1,
+        Name = "KFC",
+        StartDate =  new DateOnly(2024, 03,11),
+        EndDate = new DateOnly(2024,03,22),
+        isActive=true
+        }
+        };
+
+
+            List<Tenant> tableContent = new List<Tenant>();
+
+            public Home()
+            {
+                loadDefault();
+            }
+
+            public void  search()
+            {
+                Random rnd = new Random();
+                if (data.Where(x => x.StartDate >= filter_start).ToList().Count > 0)
+                {
+                    tableContent = data.Where(x => x.StartDate >= filter_start)
+                                        .Where(x => x.EndDate <= filter_end)
+                                     .OrderBy(y => rnd.Next()).ToList();
+                }
+                else
+                {
+                    tableContent.Clear();
+ 
+                } 
+            } 
+
+            public void loadDefault()
+            {
+                tableContent = data.Where(x => x.isActive).ToList();
+            }
+        }
+
+        @foreach (Tenant item in tableContent)
+        {
+            <TenantItem
+            TenantId="@item.TenantId"
+            Name="@item.Name"
+            StartDate="@item.StartDate"
+            EndDate="@item.EndDate"  isActive="item.isActive"  />
+        }
+     
+    </tbody>
+</table>
+
+ 
